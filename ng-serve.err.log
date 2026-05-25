@@ -1,0 +1,28 @@
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "src/styles.css"[0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.css'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~[0m
+
+  You can mark the path "src/styles.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot find tsconfig file "tsconfig.app.json"[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS500: Error: ENOENT: no such file or directory, lstat 'C:\Users\desai\Desktop\Hotel Booking Website\frontend\tsconfig.app.json'
+    at Object.lstatSync (node:fs:1701:25)
+    at NodeJSFileSystem.lstat (file:///C:/Users/desai/Desktop/Hotel%20Booking%20Website/frontend/node_modules/@angular/compiler-cli/bundles/chunk-KWAGEHJJ.js:73:15)
+    at calcProjectFileAndBasePath (file:///C:/Users/desai/Desktop/Hotel%20Booking%20Website/frontend/node_modules/@angular/compiler-cli/bundles/chunk-ZQDF64UO.js:448:29)
+    at readConfiguration (file:///C:/Users/desai/Desktop/Hotel%20Booking%20Website/frontend/node_modules/@angular/compiler-cli/bundles/chunk-ZQDF64UO.js:474:39)
+    at C:\Users\desai\Desktop\Hotel Booking Website\frontend\node_modules\@angular\build\src\tools\angular\compilation\angular-compilation.js:67:69
+    at profileSync (C:\Users\desai\Desktop\Hotel Booking Website\frontend\node_modules\@angular\build\src\tools\esbuild\profiling.js:68:16)
+    at AotCompilation.loadConfiguration (C:\Users\desai\Desktop\Hotel Booking Website\frontend\node_modules\@angular\build\src\tools\angular\compilation\angular-compilation.js:67:44)
+    at async AotCompilation.initialize (C:\Users\desai\Desktop\Hotel Booking Website\frontend\node_modules\@angular\build\src\tools\angular\compilation\aot-compilation.js:62:100)
+    at async initialize (C:\Users\desai\Desktop\Hotel Booking Website\frontend\node_modules\@angular\build\src\tools\angular\compilation\parallel-worker.js:38:121)
+    at async onMessage (C:\Users\desai\Desktop\Hotel Booking Website\frontend\node_modules\piscina\dist\worker.js:180:22)[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "C:\\Users\\desai\\Desktop\\Hotel Booking Website\\frontend\\src\\main.ts"[0m
+
+[39m[22m

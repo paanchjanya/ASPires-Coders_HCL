@@ -137,3 +137,7 @@ Component update sent to client(s).
 
 Application bundle generation complete. [0.095 seconds] - 2026-05-25T10:46:22.802Z
 
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.089 seconds] - 2026-05-25T12:07:56.431Z
+
