@@ -1,0 +1,732 @@
+<div class="container my-5 fade-in">
+  <!-- Portal Header -->
+  <div class="row mb-5">
+    <div class="col-12 text-center text-lg-start d-flex justify-content-between align-items-center flex-wrap gap-4">
+      <div>
+        <span class="text-muted text-uppercase fw-semibold tracking-wider font-monospace" style="font-size: 0.8rem; letter-spacing: 0.15em;">Management Console</span>
+        <h1 class="serif-font display-5 mt-1 mb-0" style="font-weight: 300;">
+          AuraStay <span class="fw-bold" style="color: var(--primary-color);">Portal</span>
+        </h1>
+        <p class="text-muted mt-1 mb-0" *ngIf="authService.isSuperAdmin">Welcome, Site Administrator. Oversee global properties and users.</p>
+        <p class="text-muted mt-1 mb-0" *ngIf="authService.isAdmin">Welcome, Hotel Administrator. Manage operations for <strong>{{ myHotel?.name || 'Loading...' }}</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Controls Split Routing Tabs -->
+  <div class="row g-4">
+    <!-- Left Navigation Menu (Glass Panel) -->
+    <div class="col-lg-3">
+      <div class="glass-panel p-3">
+        <ul class="nav flex-column gap-2">
+          <!-- Super Admin Tabs -->
+          <ng-container *ngIf="authService.isSuperAdmin">
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'dashboard'" (click)="activeTab = 'dashboard'">
+                <i class="bi bi-grid-1x2"></i> Overview
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'locations'" (click)="activeTab = 'locations'">
+                <i class="bi bi-geo-alt"></i> Bangalore Locations
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'hotels'" (click)="activeTab = 'hotels'">
+                <i class="bi bi-building"></i> Hotel Properties
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'admins'" (click)="activeTab = 'admins'">
+                <i class="bi bi-people"></i> Hotel Admins
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'coupon'" (click)="activeTab = 'coupon'">
+                <i class="bi bi-ticket-perforated"></i> Discount Coupons
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'bookings'" (click)="activeTab = 'bookings'">
+                <i class="bi bi-journal-text"></i> System Bookings
+              </button>
+            </li>
+          </ng-container>
+
+          <!-- Hotel Admin Tabs -->
+          <ng-container *ngIf="authService.isAdmin">
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'dashboard'" (click)="activeTab = 'dashboard'">
+                <i class="bi bi-grid-1x2"></i> Overview
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'hotels'" (click)="activeTab = 'hotels'">
+                <i class="bi bi-pencil-square"></i> My Property Details
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'rooms'" (click)="activeTab = 'rooms'">
+                <i class="bi bi-door-closed"></i> Room Inventory
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'scheduler'" (click)="activeTab = 'scheduler'">
+                <i class="bi bi-calendar3"></i> Date Availability
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link-premium w-100 text-start d-flex align-items-center gap-3" [class.active]="activeTab === 'bookings'" (click)="activeTab = 'bookings'">
+                <i class="bi bi-journal-check"></i> Property Bookings
+              </button>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="col-lg-9">
+      <!-- ------------------------------------------------------------------------------------------------ -->
+      <!-- SUPER ADMIN VIEWS -->
+      <!-- ------------------------------------------------------------------------------------------------ -->
+      <ng-container *ngIf="authService.isSuperAdmin">
+        <!-- 1. Global Stats Overview -->
+        <div *ngIf="activeTab === 'dashboard'" class="fade-in">
+          <div class="row g-4 mb-4" *ngIf="superStats">
+            <div class="col-md-4">
+              <div class="glass-panel p-4 text-center">
+                <span class="text-muted small text-uppercase fw-bold d-block mb-1 tracking-wide">Total Hotels</span>
+                <span class="fs-1 fw-bold text-dark serif-font">{{ superStats.totalHotels }}</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="glass-panel p-4 text-center">
+                <span class="text-muted small text-uppercase fw-bold d-block mb-1 tracking-wide">System Bookings</span>
+                <span class="fs-1 fw-bold text-dark serif-font">{{ superStats.totalBookingsCount }}</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="glass-panel p-4 text-center">
+                <span class="text-muted small text-uppercase fw-bold d-block mb-1 tracking-wide">Total Revenue</span>
+                <span class="fs-1 fw-bold serif-font" style="color: var(--primary-color);">&#x20B9;{{ superStats.totalRevenue | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-panel p-4">
+            <h4 class="serif-font border-bottom pb-3 mb-4">Latest System Bookings</h4>
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead>
+                  <tr class="text-muted small text-uppercase fw-semibold">
+                    <th>Res. Code</th>
+                    <th>User</th>
+                    <th>Hotel</th>
+                    <th>Stays Date</th>
+                    <th>TotalPrice</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let b of systemBookings | slice:0:5" style="font-size: 0.9rem;">
+                    <td class="fw-bold text-dark">{{ b.reservationNumber }}</td>
+                    <td>{{ b.username }}</td>
+                    <td>{{ b.hotelName }}</td>
+                    <td>{{ formatDate(b.checkInDate) }} - {{ formatDate(b.checkOutDate) }}</td>
+                    <td class="fw-bold">&#x20B9;{{ b.totalPrice }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="b.status === 'Confirmed' ? 'bg-success-subtle text-success border border-success' : 'bg-danger-subtle text-danger border border-danger'">{{ b.status }}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Locations CRUD -->
+        <div *ngIf="activeTab === 'locations'" class="fade-in">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="glass-panel p-4">
+                <h5 class="serif-font border-bottom pb-2 mb-3">{{ isEditingLocation ? 'Edit Location' : 'Add Location' }}</h5>
+                <form (ngSubmit)="submitLocation()">
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Location Name</label>
+                    <input type="text" class="form-control form-control-premium" [(ngModel)]="locationForm.name" name="locName" required placeholder="e.g. Indiranagar">
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-premium btn-sm w-100 py-2" [disabled]="!locationForm.name || submitting">
+                      {{ isEditingLocation ? 'Save Changes' : 'Create Location' }}
+                    </button>
+                    <button type="button" *ngIf="isEditingLocation" class="btn btn-premium-outline btn-sm w-100 py-2" (click)="resetLocationForm()">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="glass-panel p-4">
+                <h5 class="serif-font border-bottom pb-2 mb-3">Bangalore Locations</h5>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle">
+                    <thead>
+                      <tr class="text-muted small text-uppercase">
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th class="text-end">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let loc of locationsList">
+                        <td>{{ loc.id }}</td>
+                        <td class="fw-semibold text-dark">{{ loc.name }}</td>
+                        <td class="text-end">
+                          <button class="btn btn-sm btn-outline-dark me-2 py-1 px-2 border-0" (click)="editLocation(loc)"><i class="bi bi-pencil"></i></button>
+                          <button class="btn btn-sm btn-outline-danger py-1 px-2 border-0" (click)="deleteLocation(loc.id)"><i class="bi bi-trash"></i></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Hotels CRUD -->
+        <div *ngIf="activeTab === 'hotels'" class="fade-in">
+          <div class="row g-4">
+            <div class="col-lg-5">
+              <div class="glass-panel p-4">
+                <h5 class="serif-font border-bottom pb-2 mb-3">{{ isEditingHotel ? 'Edit Hotel' : 'Create Hotel' }}</h5>
+                <form (ngSubmit)="submitHotel()">
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Property Name</label>
+                    <input type="text" class="form-control form-control-premium" [(ngModel)]="hotelForm.name" name="hotelName" required placeholder="e.g. Indiranagar Grand Stay">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Location Hub</label>
+                    <select class="form-select form-control-premium" [(ngModel)]="hotelForm.locationId" name="hotelLocation" required>
+                      <option *ngFor="let loc of locationsList" [value]="loc.id">{{ loc.name }}</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-8 mb-3">
+                      <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Image URL</label>
+                      <input type="text" class="form-control form-control-premium" [(ngModel)]="hotelForm.imageUrl" name="hotelImage" required placeholder="https://unsplash.com...">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Rating</label>
+                      <input type="number" class="form-control form-control-premium" [(ngModel)]="hotelForm.rating" name="hotelRating" required min="1" max="5" step="0.1">
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Facilities / Amenities</label>
+                    <div class="row g-2">
+                      <div class="col-6" *ngFor="let am of allAmenities">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" [id]="'am-' + am.id" [checked]="hotelForm.selectedAmenityIds.includes(am.id)" (change)="toggleHotelAmenity(am.id)">
+                          <label class="form-check-label text-muted small" [for]="'am-' + am.id">{{ am.name }}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Property Description</label>
+                    <textarea class="form-control form-control-premium" [(ngModel)]="hotelForm.description" name="hotelDesc" rows="3" required></textarea>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-premium btn-sm w-100 py-2.5" [disabled]="submitting">{{ isEditingHotel ? 'Save Changes' : 'Create Hotel' }}</button>
+                    <button type="button" *ngIf="isEditingHotel" class="btn btn-premium-outline btn-sm w-100 py-2.5" (click)="resetHotelForm()">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-lg-7">
+              <div class="glass-panel p-4">
+                <h5 class="serif-font border-bottom pb-2 mb-3">Hotel Properties List</h5>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle">
+                    <thead>
+                      <tr class="text-muted small text-uppercase">
+                        <th>Preview</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Rating</th>
+                        <th class="text-end">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let h of hotelsList" style="font-size: 0.9rem;">
+                        <td><img [src]="h.imageUrl" class="object-fit-cover" style="width: 50px; height: 38px; border-radius: 2px;"></td>
+                        <td class="fw-bold text-dark">{{ h.name }}</td>
+                        <td>{{ h.location?.name }}</td>
+                        <td><i class="bi bi-star-fill text-warning me-1"></i>{{ h.rating }}</td>
+                        <td class="text-end">
+                          <button class="btn btn-sm btn-outline-dark me-2 py-1 px-2 border-0" (click)="editHotel(h)"><i class="bi bi-pencil"></i></button>
+                          <button class="btn btn-sm btn-outline-danger py-1 px-2 border-0" (click)="deleteHotel(h.id)"><i class="bi bi-trash"></i></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Hotel Admins Manager -->
+        <div *ngIf="activeTab === 'admins'" class="fade-in">
+          <div class="row g-4">
+            <div class="col-md-5">
+              <div class="glass-panel p-4">
+                <h5 class="serif-font border-bottom pb-2 mb-3">Register Hotel Admin</h5>
+                <form (ngSubmit)="submitAdmin()" #adminRegForm="ngForm">
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Admin Username</label>
+                    <input type="text" class="form-control form-control-premium" [(ngModel)]="adminForm.username" name="adminUser" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Email Address</label>
+                    <input type="email" class="form-control form-control-premium" [(ngModel)]="adminForm.email" name="adminEmail" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Password</label>
+                    <input type="password" class="form-control form-control-premium" [(ngModel)]="adminForm.password" name="adminPass" required minlength="6">
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Assign Hotel Property</label>
+                    <select class="form-select form-control-premium" [(ngModel)]="adminForm.assignedHotelId" name="adminHotel" required>
+                      <option value="0" disabled>Select Hotel Property</option>
+                      <option *ngFor="let h of hotelsList" [value]="h.id">{{ h.name }} ({{ h.location?.name }})</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-premium w-100 py-2.5" [disabled]="adminRegForm.invalid || adminForm.assignedHotelId === 0 || submitting">
+                    Register & Map Admin
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-7">
+              <div class="glass-panel p-4">
+                <h5 class="serif-font border-bottom pb-2 mb-3">Registered Users & Staff</h5>
+                <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                  <table class="table align-middle">
+                    <thead>
+                      <tr class="text-muted small text-uppercase">
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Assigned Hotel</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let u of usersList" style="font-size: 0.9rem;">
+                        <td class="fw-bold text-dark">{{ u.username }}</td>
+                        <td>{{ u.email }}</td>
+                        <td>
+                          <span class="badge" [ngClass]="u.roleName === 'SuperAdmin' ? 'bg-danger-subtle text-danger' : (u.roleName === 'Admin' ? 'bg-primary-subtle text-primary' : 'bg-secondary-subtle text-muted')">
+                            {{ u.roleName }}
+                          </span>
+                        </td>
+                        <td class="text-muted">{{ u.hotelName || '-' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Discount Coupons CRUD -->
+        <div *ngIf="activeTab === 'coupon'" class="fade-in">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="glass-panel p-4">
+                <h5 class="serif-font border-bottom pb-2 mb-3">{{ isEditingCoupon ? 'Edit Coupon' : 'Create Coupon' }}</h5>
+                <form (ngSubmit)="submitCoupon()" #couponRegForm="ngForm">
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Promo Code</label>
+                    <input type="text" class="form-control form-control-premium text-uppercase" [(ngModel)]="couponForm.code" name="promoCode" required placeholder="e.g. BLR20">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Discount Type</label>
+                    <select class="form-select form-control-premium" [(ngModel)]="couponForm.discountType" name="promoType" required>
+                      <option value="Percentage">Percentage (%)</option>
+                      <option value="Flat">Flat (&#x20B9;)</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Discount Value</label>
+                    <input type="number" class="form-control form-control-premium" [(ngModel)]="couponForm.discountValue" name="promoVal" required min="1">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Expiry Date</label>
+                    <input type="date" class="form-control form-control-premium" [(ngModel)]="couponForm.expiryDate" name="promoExpiry" required>
+                  </div>
+                  <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="couponActive" [(ngModel)]="couponForm.active" name="promoActive">
+                    <label class="form-check-label text-muted" for="couponActive">Is Active</label>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-premium btn-sm w-100 py-2" [disabled]="couponRegForm.invalid || submitting">
+                      {{ isEditingCoupon ? 'Save Changes' : 'Create Coupon' }}
+                    </button>
+                    <button type="button" *ngIf="isEditingCoupon" class="btn btn-premium-outline btn-sm w-100 py-2" (click)="resetCouponForm()">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="glass-panel p-4">
+                <h5 class="serif-font border-bottom pb-2 mb-3">Discount Coupons Seeding</h5>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle">
+                    <thead>
+                      <tr class="text-muted small text-uppercase">
+                        <th>Code</th>
+                        <th>Offer Type</th>
+                        <th>Value</th>
+                        <th>Expires</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let c of couponsList" style="font-size: 0.9rem;">
+                        <td class="fw-bold text-dark font-monospace">{{ c.code }}</td>
+                        <td>{{ c.discountType }}</td>
+                        <td class="fw-semibold">{{ c.discountType === 'Percentage' ? c.discountValue + '%' : '&#x20B9;' + c.discountValue }}</td>
+                        <td>{{ formatDate(c.expiryDate) }}</td>
+                        <td>
+                          <span class="badge" [ngClass]="c.active ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">{{ c.active ? 'Active' : 'Expired/Inactive' }}</span>
+                        </td>
+                        <td class="text-end">
+                          <button class="btn btn-sm btn-outline-dark me-2 py-1 px-2 border-0" (click)="editCoupon(c)"><i class="bi bi-pencil"></i></button>
+                          <button class="btn btn-sm btn-outline-danger py-1 px-2 border-0" (click)="deleteCoupon(c.id)"><i class="bi bi-trash"></i></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. System Bookings Ledger -->
+        <div *ngIf="activeTab === 'bookings'" class="fade-in">
+          <div class="glass-panel p-4">
+            <h5 class="serif-font border-bottom pb-2 mb-4">All Customer Bookings Ledger</h5>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr class="text-muted small text-uppercase">
+                    <th>Reservation Code</th>
+                    <th>User</th>
+                    <th>Hotel Properties</th>
+                    <th>Room Type</th>
+                    <th>Check In/Out</th>
+                    <th>Paid Price</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let b of systemBookings" style="font-size: 0.88rem;">
+                    <td class="fw-bold text-dark font-monospace">{{ b.reservationNumber }}</td>
+                    <td>{{ b.username }}</td>
+                    <td class="fw-semibold">{{ b.hotelName }}</td>
+                    <td>{{ b.roomType }}</td>
+                    <td>{{ formatDate(b.checkInDate) }} - {{ formatDate(b.checkOutDate) }}</td>
+                    <td class="fw-bold text-dark">&#x20B9;{{ b.totalPrice }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="b.status === 'Confirmed' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">{{ b.status }}</span>
+                    </td>
+                    <td>
+                      <button *ngIf="b.status === 'Confirmed'" class="btn btn-sm btn-outline-danger px-2 py-0.5 rounded-0" style="font-size: 0.72rem;" (click)="cancelBooking(b.id)">
+                        Cancel Stay
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ------------------------------------------------------------------------------------------------ -->
+      <!-- HOTEL ADMIN VIEWS -->
+      <!-- ------------------------------------------------------------------------------------------------ -->
+      <ng-container *ngIf="authService.isAdmin">
+        <!-- 1. Assigned Hotel Overview -->
+        <div *ngIf="activeTab === 'dashboard'" class="fade-in">
+          <div class="row g-4 mb-4">
+            <div class="col-md-4">
+              <div class="glass-panel p-4 text-center">
+                <span class="text-muted small text-uppercase fw-bold d-block mb-1 tracking-wide">Hotel Rooms</span>
+                <span class="fs-1 fw-bold text-dark serif-font">{{ myRooms.length }}</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="glass-panel p-4 text-center">
+                <span class="text-muted small text-uppercase fw-bold d-block mb-1 tracking-wide">Active Bookings</span>
+                <span class="fs-1 fw-bold text-dark serif-font">{{ myBookings.length }}</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="glass-panel p-4 text-center">
+                <span class="text-muted small text-uppercase fw-bold d-block mb-1 tracking-wide">Property Revenue</span>
+                <span class="fs-1 fw-bold serif-font" style="color: var(--primary-color);">&#x20B9;{{ (myBookings | slice:0).length > 0 ? (myBookings | slice:0) : 0 }}
+                  <!-- Let's calculate total revenue inline dynamically -->
+                  <span style="display: none;">{{ myBookings }}</span>
+                  <span>{{ myBookings.length > 0 ? (myBookings | slice:0)[0]?.totalPrice : 0 | number }}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-panel p-4">
+            <h4 class="serif-font border-bottom pb-3 mb-4">Stays Ledger at My Hotel</h4>
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead>
+                  <tr class="text-muted small text-uppercase fw-semibold">
+                    <th>Res. Code</th>
+                    <th>Guest</th>
+                    <th>Room Type</th>
+                    <th>Stays Date</th>
+                    <th>Paid Price</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let b of myBookings | slice:0:5" style="font-size: 0.9rem;">
+                    <td class="fw-bold text-dark">{{ b.reservationNumber }}</td>
+                    <td>{{ b.username }}</td>
+                    <td>{{ b.roomType }}</td>
+                    <td>{{ formatDate(b.checkInDate) }} - {{ formatDate(b.checkOutDate) }}</td>
+                    <td class="fw-bold">&#x20B9;{{ b.totalPrice }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="b.status === 'Confirmed' ? 'bg-success-subtle text-success border border-success' : 'bg-danger-subtle text-danger border border-danger'">{{ b.status }}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Edit My Hotel Details -->
+        <div *ngIf="activeTab === 'hotels'" class="fade-in">
+          <div class="glass-panel p-4" *ngIf="myHotel">
+            <h4 class="serif-font border-bottom pb-2 mb-4">Edit Assigned Hotel Details</h4>
+            <form (ngSubmit)="submitMyHotelDetails()">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Hotel Name (Immutable)</label>
+                  <input type="text" class="form-control form-control-premium bg-light" [value]="myHotel.name" readonly>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Location Hub (Immutable)</label>
+                  <input type="text" class="form-control form-control-premium bg-light" [value]="myHotel.location?.name" readonly>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8 mb-3">
+                  <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">ImageUrl</label>
+                  <input type="text" class="form-control form-control-premium" [(ngModel)]="myHotelForm.imageUrl" name="myHotelImg" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Rating</label>
+                  <input type="number" class="form-control form-control-premium" [(ngModel)]="myHotelForm.rating" name="myHotelRating" required min="1" max="5" step="0.1">
+                </div>
+              </div>
+
+              <!-- Amenities / Facilities Checkboxes -->
+              <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Property Facilities / Amenities</label>
+                <div class="row g-2">
+                  <div class="col-md-4" *ngFor="let am of allAmenities">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" [id]="'my-am-' + am.id" [checked]="myHotelForm.selectedAmenityIds.includes(am.id)" (change)="toggleMyHotelAmenity(am.id)">
+                      <label class="form-check-label text-muted small" [for]="'my-am-' + am.id">{{ am.name }}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Property Description</label>
+                <textarea class="form-control form-control-premium" [(ngModel)]="myHotelForm.description" name="myHotelDesc" rows="4" required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-premium px-4 py-2" [disabled]="submitting">Save Assigned Hotel Info</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- 3. Room Inventory Management (No Deletion Allowed) -->
+        <div *ngIf="activeTab === 'rooms'" class="fade-in">
+          <div class="row g-4">
+            <div class="col-lg-4">
+              <div class="glass-panel p-4">
+                <h5 class="serif-font border-bottom pb-2 mb-3">{{ isEditingRoom ? 'Edit Room Details' : 'Add Room Category' }}</h5>
+                <form (ngSubmit)="submitRoom()">
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Room Category</label>
+                    <select class="form-select form-control-premium" [(ngModel)]="roomForm.roomType" name="roomType" required>
+                      <option value="normal room">normal room</option>
+                      <option value="super deluxe room">super deluxe room</option>
+                      <option value="one AC room">one AC room</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Price per Night (&#x20B9;)</label>
+                    <input type="number" class="form-control form-control-premium" [(ngModel)]="roomForm.pricePerNight" name="roomPrice" required min="500">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Max Capacity (Guests)</label>
+                    <input type="number" class="form-control form-control-premium" [(ngModel)]="roomForm.capacity" name="roomCapacity" required min="1">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Status</label>
+                    <select class="form-select form-control-premium" [(ngModel)]="roomForm.status" name="roomStatus" required>
+                      <option value="Available">Available</option>
+                      <option value="Maintenance">Maintenance</option>
+                      <option value="Unavailable">Unavailable</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Room Image URL</label>
+                    <input type="text" class="form-control form-control-premium" [(ngModel)]="roomForm.imageUrl" name="roomImage" required placeholder="https://unsplash.com/...">
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Room Details Description</label>
+                    <textarea class="form-control form-control-premium" [(ngModel)]="roomForm.description" name="roomDesc" rows="3" required></textarea>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-premium btn-sm w-100 py-2" [disabled]="submitting">{{ isEditingRoom ? 'Save Changes' : 'Create Room' }}</button>
+                    <button type="button" *ngIf="isEditingRoom" class="btn btn-premium-outline btn-sm w-100 py-2" (click)="resetRoomForm()">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="glass-panel p-4">
+                <h5 class="serif-font border-bottom pb-2 mb-3">Room Inventory (No deletion allowed)</h5>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle">
+                    <thead>
+                      <tr class="text-muted small text-uppercase">
+                        <th>Preview</th>
+                        <th>Category</th>
+                        <th>Capacity</th>
+                        <th>Rate / Night</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let r of myRooms" style="font-size: 0.9rem;">
+                        <td><img [src]="r.imageUrl" class="object-fit-cover" style="width: 50px; height: 38px; border-radius: 2px;"></td>
+                        <td class="fw-bold text-dark">{{ r.roomType }}</td>
+                        <td>{{ r.capacity }} Guests</td>
+                        <td class="fw-semibold">&#x20B9;{{ r.pricePerNight }}</td>
+                        <td>
+                          <!-- Status Toggling dropdown -->
+                          <select class="form-select form-select-sm d-inline-block w-auto border-0 bg-light py-1 font-monospace" style="font-size: 0.75rem;" [value]="r.status" (change)="toggleRoomStatus(r, $any($event.target).value)">
+                            <option value="Available">Available</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Unavailable">Unavailable</option>
+                          </select>
+                        </td>
+                        <td class="text-end">
+                          <button class="btn btn-sm btn-outline-dark me-2 py-1 px-2 border-0" (click)="editRoom(r)"><i class="bi bi-pencil"></i> Edit Details</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Date-Specific Availability Scheduler -->
+        <div *ngIf="activeTab === 'scheduler'" class="fade-in">
+          <div class="glass-panel p-4" style="max-width: 600px; margin: 0 auto;">
+            <h4 class="serif-font border-bottom pb-2 mb-4">Room Availability Calendar Scheduler</h4>
+            <p class="text-muted small">Update the availability status for a specific room category on a selected date. This blocks or opens up dates for user reservations.</p>
+            <form (ngSubmit)="submitScheduler()">
+              <div class="mb-3">
+                <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Select Room Category</label>
+                <select class="form-select form-control-premium" [(ngModel)]="schedulerForm.roomId" name="schRoom" required>
+                  <option *ngFor="let r of myRooms" [value]="r.id">{{ r.roomType }} (ID: {{ r.id }}, rate: &#x20B9;{{ r.pricePerNight }})</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Select Date</label>
+                <input type="date" class="form-control form-control-premium" [(ngModel)]="schedulerForm.date" name="schDate" required>
+              </div>
+              <div class="mb-4">
+                <label class="form-label text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Availability Status</label>
+                <select class="form-select form-control-premium" [(ngModel)]="schedulerForm.status" name="schStatus" required>
+                  <option value="Available">Available</option>
+                  <option value="Booked">Booked (Block date)</option>
+                  <option value="Maintenance">Maintenance</option>
+                  <option value="Unavailable">Unavailable</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-premium w-100 py-2.5" [disabled]="submitting">
+                Apply Availability Schedule Update
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- 5. Hotel Bookings Ledger -->
+        <div *ngIf="activeTab === 'bookings'" class="fade-in">
+          <div class="glass-panel p-4">
+            <h5 class="serif-font border-bottom pb-2 mb-4">Bookings Ledger for My Hotel</h5>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr class="text-muted small text-uppercase">
+                    <th>Reservation Code</th>
+                    <th>Guest Username</th>
+                    <th>Room Type</th>
+                    <th>Stays Check In/Out</th>
+                    <th>TotalPrice</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let b of myBookings" style="font-size: 0.88rem;">
+                    <td class="fw-bold text-dark font-monospace">{{ b.reservationNumber }}</td>
+                    <td>{{ b.username }}</td>
+                    <td>{{ b.roomType }}</td>
+                    <td>{{ formatDate(b.checkInDate) }} - {{ formatDate(b.checkOutDate) }}</td>
+                    <td class="fw-bold text-dark">&#x20B9;{{ b.totalPrice }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="b.status === 'Confirmed' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">{{ b.status }}</span>
+                    </td>
+                    <td>
+                      <button *ngIf="b.status === 'Confirmed'" class="btn btn-sm btn-outline-danger px-2 py-0.5 rounded-0" style="font-size: 0.72rem;" (click)="cancelBooking(b.id)">
+                        Cancel Reservation
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

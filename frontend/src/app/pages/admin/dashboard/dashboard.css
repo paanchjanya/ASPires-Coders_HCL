@@ -1,0 +1,103 @@
+/* Glassmorphic Panel Design System */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.08);
+}
+
+/* Premium Navigation Links */
+.nav-link-premium {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.88rem;
+  padding: 0.85rem 1.25rem;
+  transition: all 0.2s ease-in-out;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.nav-link-premium:hover {
+  color: var(--text-dark);
+  background: rgba(0, 0, 0, 0.02);
+  border-left: 3px solid var(--primary-color);
+}
+
+.nav-link-premium.active {
+  color: var(--text-dark);
+  background: rgba(197, 168, 128, 0.08); /* Transparent primary HSL */
+  border: 1px solid rgba(197, 168, 128, 0.15);
+  border-left: 4px solid var(--primary-color);
+}
+
+/* Forms styling */
+.form-control-premium {
+  border-radius: 0;
+  border: 1px solid #ddd;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.9rem;
+  transition: all 0.25s ease-in-out;
+}
+
+.form-control-premium:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(197, 168, 128, 0.15);
+  background-color: #fff;
+}
+
+/* Badges styling */
+.bg-success-subtle {
+  background-color: rgba(25, 135, 84, 0.08) !important;
+  color: #198754 !important;
+  border: 1px solid rgba(25, 135, 84, 0.2) !important;
+  border-radius: 0;
+  padding: 0.35em 0.8em;
+}
+
+.bg-danger-subtle {
+  background-color: rgba(220, 53, 69, 0.08) !important;
+  color: #dc3545 !important;
+  border: 1px solid rgba(220, 53, 69, 0.2) !important;
+  border-radius: 0;
+  padding: 0.35em 0.8em;
+}
+
+.bg-primary-subtle {
+  background-color: rgba(13, 110, 253, 0.08) !important;
+  color: #0d6efd !important;
+  border: 1px solid rgba(13, 110, 253, 0.2) !important;
+  border-radius: 0;
+  padding: 0.35em 0.8em;
+}
+
+.bg-secondary-subtle {
+  background-color: rgba(108, 117, 125, 0.08) !important;
+  color: #6c757d !important;
+  border: 1px solid rgba(108, 117, 125, 0.2) !important;
+  border-radius: 0;
+  padding: 0.35em 0.8em;
+}
+
+/* Micro-animations */
+.fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
