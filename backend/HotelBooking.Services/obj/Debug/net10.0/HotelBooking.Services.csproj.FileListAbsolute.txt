@@ -1,0 +1,17 @@
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\bin\Debug\net10.0\HotelBooking.Services.deps.json
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\bin\Debug\net10.0\HotelBooking.Services.dll
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\bin\Debug\net10.0\HotelBooking.Services.pdb
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\bin\Debug\net10.0\HotelBooking.DAL.dll
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\bin\Debug\net10.0\HotelBooking.Models.dll
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\bin\Debug\net10.0\HotelBooking.Models.pdb
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\bin\Debug\net10.0\HotelBooking.DAL.pdb
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\obj\Debug\net10.0\HotelBooking.Services.csproj.AssemblyReference.cache
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\obj\Debug\net10.0\HotelBooking.Services.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\obj\Debug\net10.0\HotelBooking.Services.AssemblyInfoInputs.cache
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\obj\Debug\net10.0\HotelBooking.Services.AssemblyInfo.cs
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\obj\Debug\net10.0\HotelBooking.Services.csproj.CoreCompileInputs.cache
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\obj\Debug\net10.0\HotelBoo.9D15BAAF.Up2Date
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\obj\Debug\net10.0\HotelBooking.Services.dll
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\obj\Debug\net10.0\refint\HotelBooking.Services.dll
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\obj\Debug\net10.0\HotelBooking.Services.pdb
+C:\Users\desai\Desktop\Hotel Booking Website\backend\HotelBooking.Services\obj\Debug\net10.0\ref\HotelBooking.Services.dll
